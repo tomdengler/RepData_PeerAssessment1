@@ -1,16 +1,11 @@
----
-title: "Reproducible Research: Peer Assessment 1"
-output: 
-  html_document:
-    keep_md: true
----
+# Reproducible Research: Peer Assessment 1
 
 
 ### Loading and preprocessing the data
 
 
-```{r}
 
+```r
 library(ggplot2)
 library(plyr)
 
@@ -24,8 +19,31 @@ unzipData<-function()
 unzipData()
 
 head(rawData)
-summary(rawData)
+```
 
+```
+##   steps       date interval
+## 1    NA 2012-10-01        0
+## 2    NA 2012-10-01        5
+## 3    NA 2012-10-01       10
+## 4    NA 2012-10-01       15
+## 5    NA 2012-10-01       20
+## 6    NA 2012-10-01       25
+```
+
+```r
+summary(rawData)
+```
+
+```
+##      steps                date          interval     
+##  Min.   :  0.00   2012-10-01:  288   Min.   :   0.0  
+##  1st Qu.:  0.00   2012-10-02:  288   1st Qu.: 588.8  
+##  Median :  0.00   2012-10-03:  288   Median :1177.5  
+##  Mean   : 37.38   2012-10-04:  288   Mean   :1177.5  
+##  3rd Qu.: 12.00   2012-10-05:  288   3rd Qu.:1766.2  
+##  Max.   :806.00   2012-10-06:  288   Max.   :2355.0  
+##  NA's   :2304     (Other)   :15840
 ```
 
 
@@ -33,8 +51,8 @@ summary(rawData)
 
 ### What is mean total number of steps taken per day?
 
-```{r}
 
+```r
 rawStepsPerDay<-aggregate(steps ~ date, data=rawData,sum)
 
 plotHistogram<-function(stepsPerDay,title)
@@ -56,17 +74,32 @@ plotHistogram<-function(stepsPerDay,title)
 plotHistogram(rawStepsPerDay,"raw data")
 ```
 
+![](./PA1_template_files/figure-html/unnamed-chunk-2-1.png) 
+
 Based on the histogram the mean and median should be close, let's see...
 
-```{r}
+
+```r
 mean(rawStepsPerDay$steps)
+```
+
+```
+## [1] 10766.19
+```
+
+```r
 median(rawStepsPerDay$steps)
+```
+
+```
+## [1] 10765
 ```
 
 
 
 ### What is the average daily activity pattern?
-```{r}
+
+```r
 avgStepsPerTimeInterval<-aggregate(steps~interval,data=rawData,mean)
 maxInterval<-function() { avgStepsPerTimeInterval$interval[which.max(avgStepsPerTimeInterval$steps)] }
 
@@ -82,7 +115,16 @@ plotTimeSeries<-function()
 }
 
 plotTimeSeries()
+```
+
+![](./PA1_template_files/figure-html/unnamed-chunk-4-1.png) 
+
+```r
 maxInterval()
+```
+
+```
+## [1] 835
 ```
 
 
@@ -99,13 +141,19 @@ NA type data will first be imputed by the median of values from the dates which 
 Missing intervals will be imputed by dat from the next availalable interval within the date.
 
 Missing NA data:
-```{r}
+
+```r
 naStepCount<-sum(is.na(rawData$steps))
 naStepCount
 ```
 
+```
+## [1] 2304
+```
+
 Missing interval data:
-```{r}
+
+```r
 allIntervals<-seq(0,2355,5)
 actualIntervals<-unique(rawData$interval)
 missingIntervals<-allIntervals[!allIntervals %in% actualIntervals]
@@ -113,9 +161,13 @@ missingIntervals<-allIntervals[!allIntervals %in% actualIntervals]
 length(missingIntervals)
 ```
 
-The following will impute the missing data for the above two types:
-```{r}
+```
+## [1] 184
+```
 
+The following will impute the missing data for the above two types:
+
+```r
 impute.median<-function(x) replace(x, is.na(x), median(x, na.rm = TRUE))
 
 imputeMissing <-function()
@@ -152,9 +204,24 @@ adjData<-imputeMissing()
 adjStepsPerDay<-aggregate(steps ~ date, data=adjData,sum)
 
 plotHistogram(adjStepsPerDay,"imputed data")
-mean(adjStepsPerDay$steps)
-median(adjStepsPerDay$steps)
+```
 
+![](./PA1_template_files/figure-html/unnamed-chunk-7-1.png) 
+
+```r
+mean(adjStepsPerDay$steps)
+```
+
+```
+## [1] 15409.84
+```
+
+```r
+median(adjStepsPerDay$steps)
+```
+
+```
+## [1] 16355
 ```
 
 As can be seen from the plots, imputing values for the missing data has a significant effect on the resulting distribution.  The mean and medians are significantly higher.
@@ -162,7 +229,8 @@ As can be seen from the plots, imputing values for the missing data has a signif
 
 
 ### Are there differences in activity patterns between weekdays and weekends?
-```{r}
+
+```r
 addWeekend <- function(data)
 {
     w<-weekdays(as.Date(data$date))
@@ -186,6 +254,7 @@ plotWeekendTimeSeries<-function(inData)
 
 adjData<-addWeekend(adjData)
 plotWeekendTimeSeries(adjData)
-
 ```
+
+![](./PA1_template_files/figure-html/unnamed-chunk-8-1.png) 
 
