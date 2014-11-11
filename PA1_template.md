@@ -1,4 +1,9 @@
-# Reproducible Research: Peer Assessment 1
+---
+title: "Reproducible Research: Peer Assessment 1"
+output: 
+  html_document:
+    keep_md: true
+---
 
 
 ### Loading and preprocessing the data
@@ -74,7 +79,7 @@ plotHistogram<-function(stepsPerDay,title)
 plotHistogram(rawStepsPerDay,"raw data")
 ```
 
-![](./PA1_template_files/figure-html/unnamed-chunk-2-1.png) 
+![plot of chunk unnamed-chunk-2](figure/unnamed-chunk-2-1.png) 
 
 Based on the histogram the mean and median should be close, let's see...
 
@@ -117,7 +122,7 @@ plotTimeSeries<-function()
 plotTimeSeries()
 ```
 
-![](./PA1_template_files/figure-html/unnamed-chunk-4-1.png) 
+![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4-1.png) 
 
 ```r
 maxInterval()
@@ -206,7 +211,7 @@ adjStepsPerDay<-aggregate(steps ~ date, data=adjData,sum)
 plotHistogram(adjStepsPerDay,"imputed data")
 ```
 
-![](./PA1_template_files/figure-html/unnamed-chunk-7-1.png) 
+![plot of chunk unnamed-chunk-7](figure/unnamed-chunk-7-1.png) 
 
 ```r
 mean(adjStepsPerDay$steps)
@@ -256,5 +261,5 @@ adjData<-addWeekend(adjData)
 plotWeekendTimeSeries(adjData)
 ```
 
-![](./PA1_template_files/figure-html/unnamed-chunk-8-1.png) 
+![plot of chunk unnamed-chunk-8](figure/unnamed-chunk-8-1.png) 
 
